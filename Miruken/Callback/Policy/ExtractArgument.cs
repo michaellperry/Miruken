@@ -1,6 +1,7 @@
 namespace Miruken.Callback.Policy
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
 
     public class ExtractArgument<Cb, Res> : ArgumentRule
@@ -14,7 +15,9 @@ namespace Miruken.Callback.Policy
             _extract = extract;
         }
 
-        public override bool Matches(ParameterInfo parameter, DefinitionAttribute attribute)
+        public override bool Matches(
+            ParameterInfo parameter, DefinitionAttribute attribute,
+            IDictionary<string, Type> aliases)
         {
             var paramType = parameter.ParameterType;
             return typeof(Res).IsAssignableFrom(paramType);

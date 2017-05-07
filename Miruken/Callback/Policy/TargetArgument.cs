@@ -1,6 +1,7 @@
 namespace Miruken.Callback.Policy
 {
     using System;
+    using System.Collections.Generic;
     using System.Reflection;
 
     public class TargetArgument<Cb> : ArgumentRule
@@ -14,7 +15,9 @@ namespace Miruken.Callback.Policy
             _target = target;
         }
 
-        public override bool Matches(ParameterInfo parameter, DefinitionAttribute attribute)
+        public override bool Matches(
+            ParameterInfo parameter, DefinitionAttribute attribute,
+            IDictionary<string, Type> aliases)
         {
             var restrict  = attribute.Key as Type;
             var paramType = parameter.ParameterType;
