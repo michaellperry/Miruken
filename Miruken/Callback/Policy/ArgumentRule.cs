@@ -95,7 +95,11 @@
                 throw new InvalidOperationException(
                     $"{_type.FullName} has {genericArgs.Length} generic args, but {_aliases.Length} requested");
             for (var i = 0; i < _aliases.Length; ++i)
-                aliases.Add(_aliases[i], genericArgs[i]);
+            {
+                var alias = _aliases[i];
+                if (!string.IsNullOrEmpty(alias))
+                    aliases.Add(_aliases[i], genericArgs[i]);
+            }
             return true;
         }
     }

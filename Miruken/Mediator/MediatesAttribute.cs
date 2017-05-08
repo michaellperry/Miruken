@@ -17,9 +17,15 @@
         public override CallbackPolicy CallbackPolicy => Policy;
 
         public static readonly ContravariantPolicy Policy =
-            ContravariantPolicy.Create(
-                x => x.MatchMethod(x.Callback.OfType<IRequest>())
-                      .MatchMethod(Return.Is("resp"), x.Callback.OfType(typeof(IRequest<>), "resp"))
+            ContravariantPolicy.Create<Request>(r => r.Callback,
+                x => x.MatchMethod(x.Target.OfType<IRequest>(),
+                                   x.Composer.Optional)
+                      .MatchMethod(Return.Is("resp"),
+                                   x.Target.OfType(typeof(IRequest<>), "resp"),
+                                   x.Composer.Optional)
+                      .MatchMethod(x.Target.OfType<INotification>(),
+                                   x.Composer.Optional)
+                      .MatchMethod(x.Callback, x.Composer.Optional)
             );
     }
 }

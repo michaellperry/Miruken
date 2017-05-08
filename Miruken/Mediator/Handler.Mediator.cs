@@ -66,5 +66,29 @@
                         : Promise.Resolved(result);
             return (Promise<Resp>)promise.Coerce(typeof(Promise<Resp>));
         }
+
+        public static void Publish(this IHandler handler, INotification notification)
+        {
+            if (handler == null) return;
+            var req = new Request(notification, true)
+            {
+                Policy = MediatesAttribute.Policy
+            };
+            if (handler.Handle(req, true) && req.IsAsync)
+                ((Promise)req.Result).Wait();
+        }
+
+        public static Promise PublishAsync(this IHandler handler, INotification notification)
+        {
+            if (handler == null)
+                return Promise.Empty;
+            var req = new Request(notification, true)
+            {
+                Policy = MediatesAttribute.Policy
+            };
+            return handler.Handle(req, true) && req.IsAsync
+                 ? (Promise)req.Result
+                 : Promise.Empty;
+        }
     }
 }
